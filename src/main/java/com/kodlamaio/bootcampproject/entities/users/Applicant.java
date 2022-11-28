@@ -1,10 +1,14 @@
 package com.kodlamaio.bootcampproject.entities.users;
 
+import com.kodlamaio.bootcampproject.entities.BlackList;
+import com.kodlamaio.bootcampproject.entities.applications.Application;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="applicants")
@@ -12,14 +16,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Applicant extends User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
 
     @Column(name="about")
     private String about;
-    @OneToOne
-    @MapsId
-    private User user;
+
+    @OneToMany(mappedBy = "applicant")
+    private List<Application> applications;
+
+    @OneToMany(mappedBy = "applicant")
+    private List<BlackList> blackLists;
 }
