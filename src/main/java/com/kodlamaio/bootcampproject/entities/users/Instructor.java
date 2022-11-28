@@ -1,10 +1,12 @@
 package com.kodlamaio.bootcampproject.entities.users;
 
+import com.kodlamaio.bootcampproject.entities.Bootcamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="instructors")
@@ -12,14 +14,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Instructor extends User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
 
     @Column(name="companyName")
     private String companyName;
-    @OneToOne
-    @MapsId
-    private User user;
+
+    @OneToMany(mappedBy = "instructor")
+    private List<Bootcamp> bootcamp;
+
 }
