@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/applications")
+@RequestMapping("/api/v1/applications")
 @AllArgsConstructor
 public class ApplicationsController {
     private ApplicationService applicationService;
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(applicationService.getAll());
     }
@@ -26,18 +26,18 @@ public class ApplicationsController {
         return ResponseEntity.status(HttpStatus.OK).body(applicationService.getById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid CreateApplicationRequest createApplicationRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.add(createApplicationRequest));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id,@RequestBody UpdateApplicationRequest updateApplicationRequest){
         updateApplicationRequest.setId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(applicationService.update(id,updateApplicationRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK).body(applicationService.delete(id));
     }

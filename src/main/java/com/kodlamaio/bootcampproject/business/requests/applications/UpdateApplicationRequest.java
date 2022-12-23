@@ -14,7 +14,7 @@ public class UpdateApplicationRequest {
     @Min(value = 1)
     private int bootcampId;
     @Min(value = 1)
-    private int userId;
+    private int applicantId;
     @Min(value = 1)
     private int state;
 }

@@ -15,6 +15,6 @@ public interface EmployeeService {
     DataResult<List<GetAllEmployeesResponse>> getAll();
     DataResult<GetEmployeeResponse> getById(int id);
     DataResult<CreateEmployeeResponse> add(CreateEmployeeRequest createEmployeeRequest);
-    DataResult<UpdateEmployeeResponse> update(UpdateEmployeeRequest updateEmployeeRequest);
+    DataResult<UpdateEmployeeResponse> update(int id,UpdateEmployeeRequest updateEmployeeRequest);
     Result delete(int id);
 }

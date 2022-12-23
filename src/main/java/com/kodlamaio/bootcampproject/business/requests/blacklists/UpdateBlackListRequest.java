@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateBlackListRequest {
-    @Min(value = 1)
-    private int id;
     private LocalDate date;
     @Size(min = 3,max = 254)
     @NotBlank

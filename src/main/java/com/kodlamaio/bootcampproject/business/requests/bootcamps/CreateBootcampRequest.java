@@ -19,8 +19,7 @@ public class CreateBootcampRequest {
     @NotBlank
     @Size(min = 3,max=254)
     private String name;
-    @NotBlank
-    @Size(min = 3,max=254)
+    @Min(1)
     private int state;
     @NotNull
     private LocalDate startDate;

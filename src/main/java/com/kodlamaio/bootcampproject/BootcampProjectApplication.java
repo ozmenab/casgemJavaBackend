@@ -23,26 +23,5 @@ public class BootcampProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(BootcampProjectApplication.class, args);
     }
-    @Bean
-    public ModelMapper getModelMapper(){
-        return new ModelMapper();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ErrorDataResult<Object> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException){
-        Map<String,String> validationErrors = new HashMap<String,String>();
-        for(FieldError fieldError: methodArgumentNotValidException.getBindingResult().getFieldErrors()){
-            validationErrors.put(fieldError.getField(),fieldError.getDefaultMessage());
-        }
-        ErrorDataResult<Object> errorDataResult = new ErrorDataResult<>(validationErrors,"VALIDATION.EXCEPTION");
-        return errorDataResult;
-    }
-    @ExceptionHandler
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ErrorDataResult<Object> handleBusinessException(BusinessException businessException){
-        ErrorDataResult<Object> errorDataResult = new ErrorDataResult<>(businessException.getMessage(),"BUSİNESS.EXCEPTION");
-        return errorDataResult;
-    }
 
 }

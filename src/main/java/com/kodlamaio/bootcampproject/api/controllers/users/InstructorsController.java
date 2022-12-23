@@ -9,14 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/api/instructors")
+@RequestMapping("/api/v1/instructors")
 @AllArgsConstructor
 public class InstructorsController {
     private InstructorService instructorService;
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(instructorService.getAll());
     }
@@ -26,18 +27,17 @@ public class InstructorsController {
         return ResponseEntity.status(HttpStatus.OK).body(instructorService.getById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid CreateInstructorRequest createInstructorRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(instructorService.add(createInstructorRequest));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable int id,@RequestBody @Valid UpdateInstructorRequest updateInstructorRequest){
-        updateInstructorRequest.setId(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(instructorService.update(updateInstructorRequest));
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable @Valid @Positive int id, @RequestBody @Valid UpdateInstructorRequest updateInstructorRequest){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(instructorService.update(id,updateInstructorRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK).body(instructorService.delete(id));
     }

@@ -11,10 +11,10 @@ import javax.validation.constraints.Min;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateApplicationRequest {
-    @Min(value = 1)
+    @Min(value = 0)
     private int bootcampId;
-    @Min(value = 1)
+    @Min(value = 0)
     private int applicantId;
-    @Min(value = 1)
+    @Min(value = 0)
     private int state;
 }

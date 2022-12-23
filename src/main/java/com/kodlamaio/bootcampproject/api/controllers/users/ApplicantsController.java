@@ -12,13 +12,13 @@ import javax.validation.Valid;
 
 // http://localhost:8080/api/applicants
 @RestController
-@RequestMapping("/api/applicants")
+@RequestMapping("/api/v1/applicants")
 @AllArgsConstructor
 public class ApplicantsController {
     private ApplicantService applicantService;
 
-    // http://localhost:8080/api/applicants/getAll
-    @GetMapping("/getAll")
+    // http://localhost:8080/api/v1/applicants
+    @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(applicantService.getAll());
     }
@@ -28,18 +28,18 @@ public class ApplicantsController {
         return ResponseEntity.status(HttpStatus.OK).body(applicantService.getById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid CreateApplicantRequest createApplicantRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(applicantService.add(createApplicantRequest));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id,@RequestBody @Valid UpdateApplicantRequest updateApplicantRequest){
         updateApplicantRequest.setId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(applicantService.update(updateApplicantRequest));
     }
     
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK).body(applicantService.delete(id));
     }

@@ -19,7 +19,7 @@ public class Application {
     @Column(name="id")
     private int id;
     @Column(name="state")
-    private String state;
+    private int state;
 
     @ManyToOne
     @JoinColumn(name = "applicant_id")

@@ -15,6 +15,6 @@ public interface InstructorService {
     DataResult<List<GetAllInstructorsResponse>> getAll();
     DataResult<GetInstructorResponse> getById(int id);
     DataResult<CreateInstructorResponse> add(CreateInstructorRequest createInstructorRequest);
-    DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest updateInstructorRequest);
+    DataResult<UpdateInstructorResponse> update(int id,UpdateInstructorRequest updateInstructorRequest);
     Result delete(int id);
 }

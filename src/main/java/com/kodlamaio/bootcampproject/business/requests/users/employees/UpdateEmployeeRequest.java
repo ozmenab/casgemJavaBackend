@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEmployeeRequest {
-    @Min(value = 1)
-    private int id;
     @NotBlank
     @Length(min = 1, max =254 )
     private String firstName;

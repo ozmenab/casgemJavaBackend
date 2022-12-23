@@ -10,8 +10,6 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateInstructorRequest {
-    @Min(value = 1)
-    private int id;
     @Size(min = 3)
     @NotNull
     private String firstName;

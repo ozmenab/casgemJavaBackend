@@ -1,12 +1,14 @@
 package com.kodlamaio.bootcampproject.business.concretes.applications;
 
 import com.kodlamaio.bootcampproject.business.abstracts.BlackListService;
+import com.kodlamaio.bootcampproject.business.abstracts.BootcampService;
 import com.kodlamaio.bootcampproject.business.abstracts.applications.ApplicationService;
 import com.kodlamaio.bootcampproject.business.abstracts.users.ApplicantService;
 import com.kodlamaio.bootcampproject.business.constants.Messages;
 import com.kodlamaio.bootcampproject.business.requests.applications.CreateApplicationRequest;
 import com.kodlamaio.bootcampproject.business.requests.applications.UpdateApplicationRequest;
 import com.kodlamaio.bootcampproject.business.responses.applications.*;
+import com.kodlamaio.bootcampproject.business.responses.bootcamps.GetBootcampResponse;
 import com.kodlamaio.bootcampproject.core.utilities.exceptions.BusinessException;
 import com.kodlamaio.bootcampproject.core.utilities.mapping.ModelMapperService;
 import com.kodlamaio.bootcampproject.core.utilities.results.DataResult;
@@ -14,6 +16,7 @@ import com.kodlamaio.bootcampproject.core.utilities.results.Result;
 import com.kodlamaio.bootcampproject.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.bootcampproject.core.utilities.results.SuccessResult;
 import com.kodlamaio.bootcampproject.dataAccess.abstracts.applications.ApplicationRepository;
+import com.kodlamaio.bootcampproject.entities.Bootcamp;
 import com.kodlamaio.bootcampproject.entities.applications.Application;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class ApplicationManager implements ApplicationService {
     private ModelMapperService modelMapperService;
     private ApplicantService applicantService;
     private BlackListService blackListService;
+    private BootcampService bootcampService;
 
     @Override
     public DataResult<List<GetAllApplicationsResponse>> getAll() {
@@ -51,6 +55,7 @@ public class ApplicationManager implements ApplicationService {
     public DataResult<CreateApplicationResponse> add(CreateApplicationRequest createApplicationRequest) {
         checkIsApplicantBlackList(createApplicationRequest.getApplicantId());
         checkIsApplicant(createApplicationRequest.getApplicantId());
+        checkIfExistsBootcampById(createApplicationRequest.getBootcampId());
         Application application = modelMapperService.forRequest().map(createApplicationRequest,Application.class);
         applicationRepository.save(application);
         CreateApplicationResponse response = modelMapperService.forResponse().map(application,CreateApplicationResponse.class);
@@ -60,6 +65,8 @@ public class ApplicationManager implements ApplicationService {
     @Override
     public DataResult<UpdateApplicationResponse> update(int id,UpdateApplicationRequest updateApplicationRequest) {
         checkIfExistsApplicationById(id);
+        checkIfExistsBootcampById(updateApplicationRequest.getBootcampId());
+        checkIsApplicant(updateApplicationRequest.getApplicantId());
         Application application = modelMapperService.forRequest().map(updateApplicationRequest,Application.class);
         application.setId(id);
         applicationRepository.save(application);
@@ -88,5 +95,11 @@ public class ApplicationManager implements ApplicationService {
     }
     private void checkIsApplicantBlackList(int applicantId) {
         blackListService.IsBlackListByApplicantId(applicantId);
+    }
+
+    private void checkIfExistsBootcampById(int bootcampId){
+        GetBootcampResponse bootcampResponse= bootcampService.getById(bootcampId).getData();
+        if(bootcampResponse==null)
+            throw new BusinessException("Bootcamp no exists");
     }
 }

@@ -58,8 +58,8 @@ public class BlackListManager implements BlackListService {
     }
 
     @Override
-    public DataResult<UpdateBlackListResponse> update(UpdateBlackListRequest updateBlackListRequest) {
-        checkIfBlackListExists(updateBlackListRequest.getId());
+    public DataResult<UpdateBlackListResponse> update(int id,UpdateBlackListRequest updateBlackListRequest) {
+        checkIfBlackListExists(id);
         BlackList blackList = modelMapperService.forRequest().map(updateBlackListRequest,BlackList.class);
         blackListRepository.save(blackList);
         UpdateBlackListResponse response = modelMapperService.forResponse().map(blackList,UpdateBlackListResponse.class);
@@ -81,12 +81,12 @@ public class BlackListManager implements BlackListService {
     private void checkIfBlackListExistsByApplicantId(int applicantId){
         BlackList blackList = blackListRepository.findByApplicantId(applicantId);
         if(blackList != null)
-            throw new BusinessException(Messages.BlackListExists);
+            throw new BusinessException(Messages.BlackListExistsApplicantById);
     }
     private BlackList checkIfBlackListExists(int id){
         BlackList blackList = blackListRepository.findById(id).orElse(null);
         if(blackList == null)
-            throw new BusinessException(Messages.BlackListExists);
+            throw new BusinessException(Messages.BlackListNotExists);
         return blackList;
     }
 }

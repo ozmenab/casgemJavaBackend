@@ -40,7 +40,7 @@ public class InstructorManager implements InstructorService {
 
     @Override
     public DataResult<GetInstructorResponse> getById(int id) {
-        checkIfExistsEmployeeById(id);
+        checkIfExistsInstructorById(id);
         Instructor instructor = instructorRepository.findById(id).get();
         GetInstructorResponse response = modelMapperService.forResponse().map(instructor,GetInstructorResponse.class);
         DataResult<GetInstructorResponse> result = new DataResult<>(response,true);
@@ -57,9 +57,10 @@ public class InstructorManager implements InstructorService {
     }
 
     @Override
-    public DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest updateInstructorRequest) {
-        checkIfExistsEmployeeById(updateInstructorRequest.getId());
+    public DataResult<UpdateInstructorResponse> update(int id,UpdateInstructorRequest updateInstructorRequest) {
+        checkIfExistsInstructorById(id);
         Instructor instructor = modelMapperService.forRequest().map(updateInstructorRequest,Instructor.class);
+        instructor.setId(id);
         Instructor updatedInstructor = instructorRepository.save(instructor);
         UpdateInstructorResponse response = modelMapperService.forResponse().map(updatedInstructor,UpdateInstructorResponse.class);
         DataResult<UpdateInstructorResponse> result = new DataResult<>(response,true,Messages.InstructorUpdated);
@@ -68,7 +69,7 @@ public class InstructorManager implements InstructorService {
 
     @Override
     public Result delete(int id) {
-        checkIfExistsEmployeeById(id);
+        checkIfExistsInstructorById(id);
         instructorRepository.deleteById(id);
         return new SuccessResult(Messages.InstructorDeleted);
     }
@@ -79,9 +80,9 @@ public class InstructorManager implements InstructorService {
             throw new BusinessException(Messages.EmployeeExists);
     }
 
-    private void checkIfExistsEmployeeById(int id) {
+    private void checkIfExistsInstructorById(int id) {
         Instructor instructor = instructorRepository.findById(id).orElse(null);
         if(instructor == null)
-            throw new BusinessException(Messages.EmployeeIfNotExists);
+            throw new BusinessException(Messages.InstructorIfNotExists);
     }
 }

@@ -12,12 +12,12 @@ import javax.validation.Valid;
 
 // http://localhost:8080/api/employees
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/api/v1/employees")
 @AllArgsConstructor
 public class EmployeesController {
     private EmployeeService employeeService;
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getAll());
     }
@@ -27,18 +27,17 @@ public class EmployeesController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.getById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid CreateEmployeeRequest createEmployeeRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.add(createEmployeeRequest));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id,@RequestBody @Valid UpdateEmployeeRequest updateEmployeeRequest){
-        updateEmployeeRequest.setId(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeService.update(updateEmployeeRequest));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeService.update(id,updateEmployeeRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK).body(employeeService.delete(id));
     }

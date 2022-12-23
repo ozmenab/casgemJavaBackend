@@ -24,7 +24,9 @@ public class Messages {
     public static final String ApplicationCreated = "Application Created";
     public static final String ApplicationUpdated = "Application Updated";
     public static final String ApplicationDeleted = "Application Deleted";
-    public static final String BlackListExists = "Applicant is BlackList";
+    public static final String BlackListNotExists = "BlackList no exists";
+    public static final String BlackListExistsApplicantById = "Applicant is BlackList";
     public static final String BlackListDeleted = "BlackList Deleted";
     public static final String BootcampEndDateNotBeforeStartDate = "Bootcamp end date is not before start date";
+    public static final String InstructorIfNotExists = "Instructor no exists";
 }

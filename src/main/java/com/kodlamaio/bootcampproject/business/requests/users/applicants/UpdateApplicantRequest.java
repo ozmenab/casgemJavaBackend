@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateApplicantRequest {
-    @Min(value = 1)
+    @Min(value = 0)
     private int id;
     @NotBlank
     @Length(min = 1, max =254 )

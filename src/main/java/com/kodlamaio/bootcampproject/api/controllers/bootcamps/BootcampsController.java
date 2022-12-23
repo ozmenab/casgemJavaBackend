@@ -1,4 +1,4 @@
-package com.kodlamaio.bootcampproject.api.controllers;
+package com.kodlamaio.bootcampproject.api.controllers.bootcamps;
 
 import com.kodlamaio.bootcampproject.business.abstracts.BootcampService;
 import com.kodlamaio.bootcampproject.business.requests.bootcamps.CreateBootcampRequest;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/bootcamps")
+@RequestMapping("/api/v1/bootcamps")
 @AllArgsConstructor
 public class BootcampsController {
     private BootcampService bootcampService;
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(bootcampService.getAll());
     }
@@ -26,18 +26,17 @@ public class BootcampsController {
         return ResponseEntity.status(HttpStatus.OK).body(bootcampService.getById(id));
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid CreateBootcampRequest createBootcampRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(bootcampService.add(createBootcampRequest));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id,@RequestBody @Valid UpdateBootcampRequest updateBootcampRequest){
-        updateBootcampRequest.setId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(bootcampService.update(id,updateBootcampRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         return ResponseEntity.status(HttpStatus.OK).body(bootcampService.delete(id));
     }
