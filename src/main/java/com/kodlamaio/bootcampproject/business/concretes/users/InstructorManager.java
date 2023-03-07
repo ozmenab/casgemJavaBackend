@@ -16,10 +16,13 @@ import com.kodlamaio.bootcampproject.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.bootcampproject.core.utilities.results.SuccessResult;
 import com.kodlamaio.bootcampproject.dataAccess.abstracts.users.InstructorRepository;
 import com.kodlamaio.bootcampproject.entities.users.Instructor;
+import com.kodlamaio.bootcampproject.entities.users.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class InstructorManager implements InstructorService {
     private InstructorRepository instructorRepository;
     private ModelMapperService modelMapperService;
+    private PasswordEncoder passwordEncoder;
     @Override
     public DataResult<List<GetAllInstructorsResponse>> getAll() {
         List<Instructor> instructors = instructorRepository.findAll();
@@ -51,6 +55,8 @@ public class InstructorManager implements InstructorService {
     public DataResult<CreateInstructorResponse> add(CreateInstructorRequest createInstructorRequest) {
         checkIfExistsInstructorByNationalIdentity(createInstructorRequest.getNationalIdentity());
         Instructor instructor = modelMapperService.forRequest().map(createInstructorRequest, Instructor.class);
+        instructor.setRoles(Set.of(Role.ROLE_INSTRUCTOR));
+        instructor.setPassword(passwordEncoder.encode(createInstructorRequest.getPassword()));
         instructorRepository.save(instructor);
         CreateInstructorResponse createInstructorResponse = modelMapperService.forResponse().map(instructor, CreateInstructorResponse.class);
         return new SuccessDataResult<CreateInstructorResponse>(createInstructorResponse,Messages.InstructorCreated);
@@ -61,6 +67,8 @@ public class InstructorManager implements InstructorService {
         checkIfExistsInstructorById(id);
         Instructor instructor = modelMapperService.forRequest().map(updateInstructorRequest,Instructor.class);
         instructor.setId(id);
+        instructor.setRoles(Set.of(Role.ROLE_INSTRUCTOR));
+        instructor.setPassword(passwordEncoder.encode(updateInstructorRequest.getPassword()));
         Instructor updatedInstructor = instructorRepository.save(instructor);
         UpdateInstructorResponse response = modelMapperService.forResponse().map(updatedInstructor,UpdateInstructorResponse.class);
         DataResult<UpdateInstructorResponse> result = new DataResult<>(response,true,Messages.InstructorUpdated);

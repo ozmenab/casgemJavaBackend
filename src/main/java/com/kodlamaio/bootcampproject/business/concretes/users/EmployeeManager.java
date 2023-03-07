@@ -16,10 +16,13 @@ import com.kodlamaio.bootcampproject.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.bootcampproject.core.utilities.results.SuccessResult;
 import com.kodlamaio.bootcampproject.dataAccess.abstracts.users.EmployeeRepository;
 import com.kodlamaio.bootcampproject.entities.users.Employee;
+import com.kodlamaio.bootcampproject.entities.users.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class EmployeeManager implements EmployeeService {
     private EmployeeRepository employeeRepository;
     private ModelMapperService modelMapperService;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public DataResult<List<GetAllEmployeesResponse>> getAll() {
@@ -51,6 +55,8 @@ public class EmployeeManager implements EmployeeService {
     public DataResult<CreateEmployeeResponse> add(CreateEmployeeRequest createEmployeeRequest) {
         checkIfExistsEmployeeByNationalIdentity(createEmployeeRequest.getNationalIdentity());
         Employee employee = modelMapperService.forRequest().map(createEmployeeRequest,Employee.class);
+        employee.setRoles(Set.of(Role.ROLE_EMPLOYEE));
+        employee.setPassword(passwordEncoder.encode(createEmployeeRequest.getPassword()));
         Employee savedEmployee = employeeRepository.save(employee);
         CreateEmployeeResponse response = modelMapperService.forResponse().map(savedEmployee,CreateEmployeeResponse.class);
         return new SuccessDataResult<>(response,Messages.EmployeeCreated);
@@ -61,6 +67,8 @@ public class EmployeeManager implements EmployeeService {
         checkIfExistsEmployeeById(id);
         Employee employee = modelMapperService.forRequest().map(updateEmployeeRequest,Employee.class);
         employee.setId(id);
+        employee.setRoles(Set.of(Role.ROLE_EMPLOYEE));
+        employee.setPassword(passwordEncoder.encode(updateEmployeeRequest.getPassword()));
         Employee updatedEmployee=employeeRepository.save(employee);
         UpdateEmployeeResponse response = modelMapperService.forResponse().map(updatedEmployee,UpdateEmployeeResponse.class);
         return new SuccessDataResult<>(response,Messages.EmployeeUpdated);

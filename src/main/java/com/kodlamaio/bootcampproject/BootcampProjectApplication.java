@@ -19,7 +19,6 @@ import java.util.Map;
 @SpringBootApplication
 @RestControllerAdvice
 public class BootcampProjectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BootcampProjectApplication.class, args);
     }

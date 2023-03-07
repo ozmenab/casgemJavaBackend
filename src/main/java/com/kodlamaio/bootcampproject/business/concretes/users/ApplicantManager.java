@@ -16,10 +16,13 @@ import com.kodlamaio.bootcampproject.core.utilities.results.SuccessDataResult;
 import com.kodlamaio.bootcampproject.core.utilities.results.SuccessResult;
 import com.kodlamaio.bootcampproject.dataAccess.abstracts.users.ApplicantRepository;
 import com.kodlamaio.bootcampproject.entities.users.Applicant;
+import com.kodlamaio.bootcampproject.entities.users.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class ApplicantManager implements ApplicantService {
     private ModelMapperService modelMapperService;
     private ApplicantRepository applicantRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public DataResult<List<GetAllApplicantsResponse>> getAll() {
@@ -51,6 +55,8 @@ public class ApplicantManager implements ApplicantService {
     public DataResult<CreateApplicantResponse> add(CreateApplicantRequest createApplicantRequest) {
         checkIfExistsApplicantByNationalIdentity(createApplicantRequest.getNationalIdentity());
         Applicant applicant = modelMapperService.forRequest().map(createApplicantRequest,Applicant.class);
+        applicant.setRoles(Set.of(Role.ROLE_APPLICANT));
+        applicant.setPassword(passwordEncoder.encode(createApplicantRequest.getPassword()));
         Applicant savedApplicant = applicantRepository.save(applicant);
         CreateApplicantResponse response = modelMapperService.forResponse().map(savedApplicant,CreateApplicantResponse.class);
         return new SuccessDataResult<>(response,Messages.ApplicantCreated);
@@ -60,6 +66,9 @@ public class ApplicantManager implements ApplicantService {
     public DataResult<UpdateApplicantResponse> update(UpdateApplicantRequest updateApplicantRequest) {
         checkIfExistsApplicantById(updateApplicantRequest.getId());
         Applicant applicant = modelMapperService.forRequest().map(updateApplicantRequest,Applicant.class);
+        applicant.setId(updateApplicantRequest.getId());
+        applicant.setRoles(Set.of(Role.ROLE_APPLICANT));
+        applicant.setPassword(passwordEncoder.encode(updateApplicantRequest.getPassword()));
         Applicant updatedApplicant=applicantRepository.save(applicant);
         UpdateApplicantResponse response = modelMapperService.forResponse().map(updatedApplicant,UpdateApplicantResponse.class);
         return new SuccessDataResult<>(response,Messages.ApplicantUpdated);
